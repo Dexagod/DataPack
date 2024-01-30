@@ -93,7 +93,7 @@ describe('UnPackaging module', () => {
         issuer: 'https://example.org/person#actor'
       }
     })
-    
+
     const quads = unPackageFromN3Quads(p3)
     testIsomorphism(contentQuads, quads)
   })
