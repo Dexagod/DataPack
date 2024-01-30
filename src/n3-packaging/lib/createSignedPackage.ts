@@ -4,7 +4,7 @@ import * as rdf from 'rdf-js';
 import {RDFC10, Quads } from 'rdfjs-c14n';
 
 import { subtle, webcrypto } from 'crypto';
-import { packageContentString } from "./packaging";
+import { packageContentString } from "./package";
 
 export async function createContentSignatureFromN3String(content: string, privateKey: webcrypto.CryptoKey) {
     let signature = await signDataGraph(n3toQuadArray(content), privateKey)

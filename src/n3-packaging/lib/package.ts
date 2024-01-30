@@ -2,10 +2,9 @@ import { DataFactory, Parser } from 'n3'
 import type { BlankNode, Quad } from 'n3'
 import { write } from '@jeswr/pretty-turtle'
 import * as fs from 'fs'
+import { PackagePredicates } from './util'
 
 const DF = DataFactory
-
-const pack = 'https://example.org/ns/package#'
 // const policy = 'https://example.org/ns/policy#'
 const sign = 'https://example.org/ns/signature#'
 const xsd = 'http://www.w3.org/2001/XMLSchema#'
@@ -26,6 +25,7 @@ interface PackageOptions {
     value: string // Signature value
     issuer: string // Issuer of the signature
   }
+  timeStamp?: boolean
   quads?: Quad[] // Replaces the blankNode with name value "package" for the package blank node
 }
 
@@ -77,8 +77,8 @@ async function processContent (quads: Quad[], options: PackageOptions): Promise<
   const contentGraph = DF.blankNode()
 
   let packageQuads: Quad[] = [
-    DF.quad(DF.blankNode(), DF.namedNode(pack + 'package'), packageGraph, DF.defaultGraph()),
-    DF.quad(packageBlankNode, DF.namedNode(pack + 'content'), contentGraph, packageGraph)
+    DF.quad(DF.blankNode(), DF.namedNode(PackagePredicates.package), packageGraph, DF.defaultGraph()),
+    DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.content), contentGraph, packageGraph)
   ]
 
   // Adding content quads, by changing the default grapg for the content graph
@@ -100,9 +100,9 @@ async function processContent (quads: Quad[], options: PackageOptions): Promise<
 
 function addProvenance (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): Quad[] {
   const metadata: Quad[] = []
-  if (options.actor) metadata.push(DF.quad(packageBlankNode, DF.namedNode(pack + 'actor'), DF.namedNode(options.actor), packageGraph))
-  if (options.origin) metadata.push(DF.quad(packageBlankNode, DF.namedNode(pack + 'origin'), DF.namedNode(options.origin), packageGraph))
-  if (options.origin) metadata.push(DF.quad(packageBlankNode, DF.namedNode(pack + 'createdAt'), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph))
+  if (options.actor) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.actor), DF.namedNode(options.actor), packageGraph))
+  if (options.origin) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.origin), DF.namedNode(options.origin), packageGraph))
+  if (options.timeStamp) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.createdAt), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph))
   return metadata
 }
 
@@ -139,7 +139,7 @@ function addPolicy (packageBlankNode: BlankNode, packageGraph: BlankNode, option
   }
 
   metadata = metadata.concat([
-    DF.quad(packageBlankNode, DF.namedNode(pack + 'hasContentPolicy'), policyBlankNode, packageGraph),
+    DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.hasContentPolicy), policyBlankNode, packageGraph),
 
     DF.quad(policyBlankNode, DF.namedNode(dcterms + 'creator'), DF.literal(options.policy.issuer), packageGraph),
     DF.quad(policyBlankNode, DF.namedNode(dcterms + 'issued'), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph),
@@ -161,7 +161,7 @@ function addSignature (packageBlankNode: BlankNode, packageGraph: BlankNode, opt
   const signatureBlankNode = DF.blankNode()
   if (options.sign) {
     metadata = metadata.concat([
-      DF.quad(packageBlankNode, DF.namedNode(pack + 'hasContentSignature'), signatureBlankNode, packageGraph),
+      DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.hasContentSignature), signatureBlankNode, packageGraph),
       DF.quad(signatureBlankNode, DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode(sign + 'Signature'), packageGraph),
       DF.quad(signatureBlankNode, DF.namedNode(sign + 'issuer'), DF.namedNode(options.sign.issuer), packageGraph),
       DF.quad(signatureBlankNode, DF.namedNode(sign + 'created'), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph),

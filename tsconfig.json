@@ -9,6 +9,6 @@
       "noImplicitAny": true, 
       "strictNullChecks": true,
     },
-    "include": ["src"], // which files to compile
+    "include": ["src", "tests"], // which files to compile
     "exclude": ["node_modules"], // which files to skip
   }
