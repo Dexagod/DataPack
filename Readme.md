@@ -16,7 +16,7 @@ DataPack provides a method to describe subgraphs with RDF metadata.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix vcard: <://www.w3.org/2006/vcard/ns#>.
 
-[] <package> {
+[] pack:package {
     [] pack:content {
         :Bob vcard:bday "2000-01-01T09:00:00.000Z"^^xsd:dateTime .
     } ;

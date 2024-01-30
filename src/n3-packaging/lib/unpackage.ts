@@ -20,7 +20,6 @@ function unPackage(quads: Quad[]) : Quad[] {
         }
     }
     
-    return quads.filter(quad => {
-        contentGraphTerms.has(quad.graph) && DataFactory.quad(quad.subject, quad.predicate, quad.object, undefined)
-    })
+    let filteredQuads = quads.filter(quad => { contentGraphTerms.has(quad.graph) && quad.predicate.value !== pack+"package"})
+    return filteredQuads.map(quad => DataFactory.quad(quad.subject, quad.predicate, quad.object, undefined))
 }

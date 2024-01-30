@@ -19,6 +19,7 @@ async function getPubKey(issuer: string) {
 
   return importKey(objects[0].value)
 }
+
 export async function validateSignatures(data: Store) {
   for (const { subject, object, graph } of data.match(null, namedNode('https://example.org/ns/signature#hasContentSignature'), null)) {
 
