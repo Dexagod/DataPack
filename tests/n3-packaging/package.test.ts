@@ -56,7 +56,6 @@ describe('Packaging module', () => {
     const p = await packageContentStringToN3Quads(contentString, {})
     const store = new Store()
     store.addQuads(p)
-    console.log(p)
 
     // Test pack:package quad
     const quads1 = store.getQuads(null, 'https://example.org/ns/package#package', null, null)
@@ -82,7 +81,6 @@ describe('Packaging module', () => {
     const p = await packageContentStringToN3Quads(contentString, { timeStamp: true })
     const store = new Store()
     store.addQuads(p)
-    console.log(p)
 
     // Test pack:package quad
     const quads1 = store.getQuads(null, 'https://example.org/ns/package#package', null, null)
