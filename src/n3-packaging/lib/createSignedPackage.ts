@@ -3,7 +3,7 @@ import * as n3  from 'n3';
 import * as rdf from 'rdf-js';
 import {RDFC10, Quads } from 'rdfjs-c14n';
 
-import crypto, { subtle, webcrypto } from 'crypto';
+import { subtle, webcrypto } from 'crypto';
 import { packageContentString } from "./packaging";
 
 export async function createContentSignatureFromN3String(content: string, privateKey: webcrypto.CryptoKey) {
