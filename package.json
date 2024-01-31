@@ -2,17 +2,17 @@
   "name": "datapack",
   "version": "0.1.0",
   "description": "Packaging data",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@jeswr/pretty-turtle": "^1.4.0",
     "commander": "^11.1.0",
-    "eyereasoner": "^10.7.2",
     "n3": "github:rdfjs/N3.js#fd6e7f1d5982fa113349a6ad03ad99e52db898d7",
     "rdfjs-c14n": "^3.0.0"
   },

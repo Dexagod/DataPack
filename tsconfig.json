@@ -8,6 +8,7 @@
       // Recommended: Compiler complains about expressions implicitly typed as 'any'
       "noImplicitAny": true, 
       "strictNullChecks": true,
+      "skipLibCheck": true,
     },
     "include": ["src", "tests"], // which files to compile
     "exclude": ["node_modules"], // which files to skip
