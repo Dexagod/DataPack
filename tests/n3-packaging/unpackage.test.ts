@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import 'jest-rdf' // This is not working correctly somehow
-import { describe, expect, test } from '@jest/globals'
+import { describe, test } from '@jest/globals'
 import { DataFactory, type Quad } from 'n3'
 import { packageContentQuadsToN3Quads } from '../../src/n3-packaging/lib/package'
 import { unPackageFromN3Quads } from '../../src/n3-packaging/lib/unpackage'

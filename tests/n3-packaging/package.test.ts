@@ -9,9 +9,10 @@ import {
   packageContentString,
   packageContentStringToN3Quads
 } from '../../src/n3-packaging/lib/package'
-import { DataFactory, Store, type Quad, type Literal } from 'n3'
+import { DataFactory, Store, type Literal } from 'n3'
 import { PackagePredicates } from '../../src/n3-packaging/lib/util'
 import { testIsomorphism } from './utils'
+import { type Quad } from 'rdf-js'
 // import * as fs from 'fs'
 
 // TODO:: Mocking readFileSync is not working so I'm ignoring it atm

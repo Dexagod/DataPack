@@ -1,8 +1,9 @@
 import { DataFactory, Parser } from 'n3'
-import type { BlankNode, Quad } from 'n3'
+import type { BlankNode } from 'n3'
 import { write } from '@jeswr/pretty-turtle'
 import * as fs from 'fs'
-import { PackagePredicates } from './util'
+import { type N3String, PackagePredicates } from './util'
+import type * as rdf from 'rdf-js'
 
 const DF = DataFactory
 // const policy = 'https://example.org/ns/policy#'
@@ -26,40 +27,40 @@ interface PackageOptions {
     issuer: string // Issuer of the signature
   }
   timeStamp?: boolean
-  quads?: Quad[] // Replaces the blankNode with name value "package" for the package blank node
+  quads?: rdf.Quad[] // Replaces the blankNode with name value "package" for the package blank node
 }
 
-export async function packageContentFile (path: string, options: PackageOptions): Promise<string> {
+export async function packageContentFile (path: string, options: PackageOptions): Promise<N3String> {
   const n3string = fs.readFileSync(path, { encoding: 'utf-8' })
   const quads = new Parser({ format: 'text/n3' }).parse(n3string)
   return await processContentToString(quads, options)
 };
 
-export async function packageContentFileToN3Quads (path: string, options: PackageOptions): Promise<Quad[]> {
+export async function packageContentFileToN3Quads (path: string, options: PackageOptions): Promise<rdf.Quad[]> {
   const n3string = fs.readFileSync(path, { encoding: 'utf-8' })
   const quads = new Parser({ format: 'text/n3' }).parse(n3string)
   return await processContentToN3Quads(quads, options)
 };
 
-export async function packageContentString (n3string: string, options: PackageOptions): Promise<string> {
+export async function packageContentString (n3string: string, options: PackageOptions): Promise<N3String> {
   const quads = new Parser({ format: 'text/n3' }).parse(n3string)
   return await processContentToString(quads, options)
 }
 
-export async function packageContentStringToN3Quads (n3string: string, options: PackageOptions): Promise<Quad[]> {
+export async function packageContentStringToN3Quads (n3string: string, options: PackageOptions): Promise<rdf.Quad[]> {
   const quads = new Parser({ format: 'text/n3' }).parse(n3string)
   return await processContentToN3Quads(quads, options)
 }
 
-export async function packageContentQuads (quads: Quad[], options: PackageOptions): Promise<string> {
+export async function packageContentQuads (quads: rdf.Quad[], options: PackageOptions): Promise<N3String> {
   return await processContentToString(quads, options)
 }
 
-export async function packageContentQuadsToN3Quads (quads: Quad[], options: PackageOptions): Promise<Quad[]> {
+export async function packageContentQuadsToN3Quads (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
   return await processContentToN3Quads(quads, options)
 }
 
-async function processContentToString (quads: Quad[], options: PackageOptions): Promise<string> {
+async function processContentToString (quads: rdf.Quad[], options: PackageOptions): Promise<N3String> {
   const packageN3Quads = await processContent(quads, options)
   const stringResult = await write(packageN3Quads, {
     format: 'text/n3'
@@ -67,16 +68,16 @@ async function processContentToString (quads: Quad[], options: PackageOptions): 
   return stringResult
 }
 
-async function processContentToN3Quads (quads: Quad[], options: PackageOptions): Promise<Quad[]> {
+async function processContentToN3Quads (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
   return await processContent(quads, options)
 }
 
-async function processContent (quads: Quad[], options: PackageOptions): Promise<Quad[]> {
+async function processContent (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
   const packageGraph = DF.blankNode()
   const packageBlankNode = DF.blankNode()
   const contentGraph = DF.blankNode()
 
-  let packageQuads: Quad[] = [
+  let packageQuads: rdf.Quad[] = [
     DF.quad(DF.blankNode(), DF.namedNode(PackagePredicates.package), packageGraph, DF.defaultGraph()),
     DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.content), contentGraph, packageGraph)
   ]
@@ -98,16 +99,16 @@ async function processContent (quads: Quad[], options: PackageOptions): Promise<
   return packageQuads
 }
 
-function addProvenance (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): Quad[] {
-  const metadata: Quad[] = []
+function addProvenance (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): rdf.Quad[] {
+  const metadata: rdf.Quad[] = []
   if (options.actor) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.actor), DF.namedNode(options.actor), packageGraph))
   if (options.origin) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.origin), DF.namedNode(options.origin), packageGraph))
   if (options.timeStamp) metadata.push(DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.createdAt), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph))
   return metadata
 }
 
-function addPolicy (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): Quad[] {
-  let metadata: Quad[] = []
+function addPolicy (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): rdf.Quad[] {
+  let metadata: rdf.Quad[] = []
 
   if (!options.policy) return []
 
@@ -155,8 +156,8 @@ function addPolicy (packageBlankNode: BlankNode, packageGraph: BlankNode, option
   return metadata
 }
 
-function addSignature (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): Quad[] {
-  let metadata: Quad[] = []
+function addSignature (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): rdf.Quad[] {
+  let metadata: rdf.Quad[] = []
 
   const signatureBlankNode = DF.blankNode()
   if (options.sign) {
@@ -174,8 +175,8 @@ function addSignature (packageBlankNode: BlankNode, packageGraph: BlankNode, opt
 /**
  * note: This function interchanges a quad with a SUBJECT BLANK NODE value of "package" to the package blank node
  */
-function addCustomQuads (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): Quad[] {
-  let metadata: Quad[] = []
+function addCustomQuads (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): rdf.Quad[] {
+  let metadata: rdf.Quad[] = []
 
   if (options.quads) {
     metadata = options.quads.map(q => DF.quad(
