@@ -2,11 +2,17 @@
 DataPack provides a method to describe subgraphs with RDF metadata.
 
 
-# Modeling
+## Provenance
 
-## N3-packaging
+## Policies
 
-### Example
+## Signatures
+
+## Package Modeling
+
+### N3
+
+#### Example
 
 ```
 @prefix : <https://example.org/ns/example#>.
@@ -30,3 +36,7 @@ DataPack provides a method to describe subgraphs with RDF metadata.
     ] .
 } .
 ```
+
+
+### RDF 1.1 
+This is not yet available
