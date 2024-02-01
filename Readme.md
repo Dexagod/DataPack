@@ -1,6 +1,72 @@
 # DataPack
 DataPack provides a method to describe subgraphs with RDF metadata.
 
+## Usage
+
+**Creating a Package**
+```js
+import {
+    packageContentFile,               // file         ->      package as N3 string
+    packageContentFileToN3Quads,      // file         ->      package as N3 quads
+    packageContentString,             // N3 string    ->      package as N3 string
+    packageContentStringToN3Quads,    // N3 string    ->      package as N3 quads
+    packageContentQuads,              // N3 quads     ->      package as N3 string
+    packageContentQuadsToN3Quads      // N3 quads     ->      package as N3 quads
+} from './install/location'
+
+const N3ContentString = 
+`@prefix : <http://example.org/ns#>.
+:Bob :knows :Alice.`
+
+// Set package metadata options
+let options = {}
+
+// Create the package
+const packageN3String = packageContentString(N3ContentString, options);
+```
+
+**Signing a package**
+```js
+import { 
+    generateKeyPair,
+    signN3PackageQuads, 
+    signN3PackageString 
+} from './install/location'
+
+// First we need a key to sign the content with
+const keyPair = generateKeyPair();
+
+// This will nest the package in another package containing the content signature
+const issuer = "http://example.org/people#person1"
+const packageWithSignature = signN3PackageString(packageN3String, issuer, keyPair.privateKey)
+```
+
+**Validate signatures**
+```js
+import { 
+    validateN3PackageSignatures,            // This function verifies a signature over a package
+    validateContentSignature                // This function verifies a signature over a hash
+} from './install/location'
+
+// Now we can validate the package signatures
+// The following function validates all signatures found in a package.
+const packageSignaturesAreValid = validateN3PackageSignatures(packageWithSignature, keyPair.publicKey);
+```
+
+**Unpackaging the packages**
+```js
+import {
+  unpackageN3PackageString,
+  unpackageN3PackageQuads
+} from './install/location'
+
+// Now that we have verified the signatures of the package, we can remove the packaging metadata to retrieve our original data.
+// Note that additional constraints for validating data can be implemented, such as matching specific metadata, checking policy constraints, etc ...
+
+const data = unpackageN3PackageString(packageWithSignature);
+// data = `<http://example.org/ns#Bob> <http://example.org/ns#knows> <http://example.org/ns#Alice> .
+```
+
 
 ## Provenance
 Todo

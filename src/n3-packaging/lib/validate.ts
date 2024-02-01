@@ -23,12 +23,11 @@ async function getPubKey (issuer: string): Promise<webcrypto.CryptoKey> {
   return await importKey(objects[0].value)
 }
 
-export async function validatePackageSignatures (packageQuads: rdf.Quad[]): Promise<boolean> {
+export async function validatePackageSignatures (packageQuads: rdf.Quad[], publicKey: webcrypto.CryptoKey): Promise<boolean> {
   const store = new Store()
   store.addQuads(packageQuads)
 
   for (const { subject, object, graph } of store.match(null, namedNode('https://example.org/ns/signature#hasContentSignature'), null)) {
-    const pub = await getPubKey(store.getObjects(object, namedNode('https://example.org/ns/signature#issuer'), graph)[0].value)
     const [content] = store.getObjects(subject, 'https://example.org/ns/package#content', graph)
     const signature = store.getObjects(object, 'https://example.org/ns/signature#proofValue', graph)[0].value
 
@@ -39,7 +38,7 @@ export async function validatePackageSignatures (packageQuads: rdf.Quad[]): Prom
     }
 
     // Validation does not succeed
-    if (!await verifyDataGraph(quads, signature, pub)) return false
+    if (!await verifyDataGraph(quads, signature, publicKey)) return false
   }
   return true
 }

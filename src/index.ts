@@ -1,6 +1,7 @@
 export {
   signContentQuads as signN3PackageQuads,
-  signContentString as signN3PackageString
+  signContentString as signN3PackageString,
+  generateKeyPair
 } from './n3-packaging/lib/sign'
 
 export {
