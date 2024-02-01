@@ -1,4 +1,3 @@
-import type * as n3 from 'n3'
 import type * as rdf from 'rdf-js'
 
 import { subtle, type webcrypto } from 'crypto'
