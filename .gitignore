@@ -1,0 +1,60 @@
+old/
+
+
+# Node.js
+node_modules/
+jspm_packages/
+build/Release
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.node_repl_history
+
+# NPM
+.npm
+*.tgz
+npm-debug.log*
+
+# Yarn
+.yarn/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn-integrity
+.pnp.*
+.pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Yalc
+.yalc
+yalc.lock
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# Jest
+*.lcov
+coverage
+coverage-summary.json
+
+# ESLint
+.eslintcache
+
+# ComponentsJS
+componentsjs-error-state.json
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.pid.lock
+*.seed
+
+# ENV files
+.env
+.env.local
+.env.*.local
