@@ -114,11 +114,11 @@ This is not yet available
 
 # Todo
 
-[ ] Look into a supporting a generic set of  algorithms for crypto key generation, serialization and deserialization
-[ ] Look into a supporting a generic set of  algorithms for signatures
-[ ] Have concrete ontologies for crypto key storage
-[ ] Have concrete ontologies for provenance data modeling
-[ ] Have concrete ontologies for signature data modeling
-[ ] Have concrete ontologies for policy data modeling
+- [ ] Look into a supporting a generic set of  algorithms for crypto key generation, serialization and deserialization
+- [ ] Look into a supporting a generic set of  algorithms for signatures
+- [ ] Have concrete ontologies for crypto key storage
+- [ ] Have concrete ontologies for provenance data modeling
+- [ ] Have concrete ontologies for signature data modeling
+- [ ] Have concrete ontologies for policy data modeling
 
-[ ] Have a separate implementation using RDF 1.1 instead of N3
+- [ ] Have a separate implementation using RDF 1.1 instead of N3
