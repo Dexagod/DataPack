@@ -91,7 +91,7 @@ To canonicalize N3, we serialize it to RDF 1.1 quads, over which we then execute
 @prefix sign: <https://example.org/ns/signature#>.
 @prefix pol: <https://example.org/ns/policy#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
-@prefix vcard: <://www.w3.org/2006/vcard/ns#>.
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#>.
 
 [] pack:package {
     [] pack:content {
@@ -103,7 +103,7 @@ To canonicalize N3, we serialize it to RDF 1.1 quads, over which we then execute
             a sign:Signature ;
             sign:issuer :Alice ;
             sign:created "2024-01-08T17:08:52.166Z"^^xsd:dateTime ;
-            sign:proofValue "sSJ0xHT7yH2MeYjI6I7fVy+PRfh/EDJkTEOhbCA2BYcd+GBJRD1BQV1rwVe69cNPHhtvGKbITIf7TBlbpkE6YANMNNS2aSQMw8i6TLTXa16zhukp+V1nLYKE/51rt/Us".
+            sign:proofValue "sSJ0xHT7yH2MeYjI6I7fVy+PRfh/EDJkTEOhbCA2BYcd+GBJRD1BQV1rwVe69cNPHhtvGKbITIf7TBlbpkE6YANMNNS2aSQMw8i6TLTXa16zhukp+V1nLYKE/51rt/Us"
     ] .
 } .
 ```
