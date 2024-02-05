@@ -9,31 +9,34 @@ import {
 } from '@solid/community-server'
 import { DataFactory } from 'n3'
 import type { Quad } from '@rdfjs/types'
-import type { Readable } from 'node:stream'
 import { write } from '@jeswr/pretty-turtle'
+
+import { packageContentQuadsToN3Quads, packageContentQuads } from '../../../../packaging/index'
 
 const packageMimeType = 'text/n3-package'
 
 /**
  * Converts `internal/quads` to a packaged N3 format.
  */
-export class PackagingConverter extends BaseTypedRepresentationConverter {
-  public constructor () {
-    console.log('PackagingConverter constructor called')
+export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
+  public constructor (baseUrl: any, test: any) {
     const outputPreference: Record<string, number> = { 'text/n3-package': 1 }
     super(
       INTERNAL_QUADS,
       outputPreference
     )
+    test ? test.then(console.log) : console.log(test)
+    baseUrl ? baseUrl.then(console.log) : console.log(baseUrl)
+    this.inputTypes && this.inputTypes.then(console.log)
+    this.outputTypes && this.outputTypes.then(console.log)
   }
 
   public async handle ({ identifier, representation: quads, preferences }: RepresentationConverterArgs):
   Promise<Representation> {
-    console.log('PackagingConverter handle called', identifier, quads, preferences)
+    console.log('HANDLING')
 
     // Can not be undefined if the `canHandle` call passed
     const contentType = packageMimeType
-    let data: Readable
 
     // Remove the ResponseMetadata graph as we never want to see it in a serialization
     // Note that this is a temporary solution as indicated in following comment:
@@ -49,13 +52,26 @@ export class PackagingConverter extends BaseTypedRepresentationConverter {
       }
     })
 
-    const dataQuads: Quad[] = []
-    quads.data.on('data', q => { dataQuads.push(q as Quad) })
-
-    // Convert RDF/JS quads into a Notation3 string
-    const str = await write(dataQuads, {
-      format: 'text/n3'
+    // Convert Steam<Quad> to Quad[]
+    const dataQuads: Quad[] = await new Promise((resolve, reject) => {
+      const streamQuads: Quad[] = []
+      quads.data.on('data', q => { streamQuads.push(q as Quad) })
+      quads.data.on('close', () => { resolve(streamQuads) })
     })
-    return new BasicRepresentation(str, quads.metadata, contentType)
+    
+    // Create Package string
+    const packageString = await packageContentQuads(dataQuads, {
+      timeStamp: true,
+    })
+    console.log('CONVERTED', packageString)
+
+    return new BasicRepresentation(packageString, quads.metadata, contentType)
+
+    // // Convert RDF/JS quads into a Notation3 string
+    // const str = await write(dataQuads, {
+    //   format: 'text/n3'
+    // })
+    // console.log(str)
+    // return new BasicRepresentation(str, quads.metadata, contentType)
   }
 }

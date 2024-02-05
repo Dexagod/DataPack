@@ -2,10 +2,10 @@
 import 'jest-rdf' // This is not working correctly somehow
 import { describe, test } from '@jest/globals'
 import { DataFactory } from 'n3'
-import { packageContentQuadsToN3Quads } from '../../src/n3-packaging/lib/package'
-import { createContentSignatureFromN3String, createContentSignatureFromQuads, generateKeyPair, signContentQuads } from '../../src/n3-packaging/lib/sign'
+import { packageContentQuadsToN3Quads } from '../../n3/src/package'
+import { createContentSignatureFromQuads, generateKeyPair, signContentQuads } from '../../n3/src/sign'
 import type * as rdf from 'rdf-js'
-import { verifyDataGraph } from '../../src/n3-packaging/lib/validate'
+import { verifyDataGraph } from '../../n3/src/validate'
 
 describe('UnPackaging module', () => {
   const contentQuads: rdf.Quad[] = [

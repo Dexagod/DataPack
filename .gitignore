@@ -58,3 +58,6 @@ pids
 .env
 .env.local
 .env.*.local
+
+# CSS
+.data

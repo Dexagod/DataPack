@@ -2,8 +2,8 @@
 import 'jest-rdf' // This is not working correctly somehow
 import { describe, test } from '@jest/globals'
 import { DataFactory, type Quad } from 'n3'
-import { packageContentQuadsToN3Quads } from '../../src/n3-packaging/lib/package'
-import { unPackageFromN3Quads } from '../../src/n3-packaging/lib/unpackage'
+import { packageContentQuadsToN3Quads } from '../../n3/src/package'
+import { unPackageFromN3Quads } from '../../n3/src/unpackage'
 import { testIsomorphism } from './utils'
 
 describe('UnPackaging module', () => {

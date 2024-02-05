@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "tsc --watch",
     "test": "jest",
-    "build": "tsc"
+    "build": "npm run build:ts && npm run build:components",
+    "build:ts": "tsc",
+    "build:components": "componentsjs-generator -s src -c dist/components -r hello-world"
   },
   "author": "",
   "license": "ISC",

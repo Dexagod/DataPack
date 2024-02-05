@@ -10,6 +10,6 @@
       "strictNullChecks": true,
       "skipLibCheck": true,
     },
-    "include": ["src", "tests"], // which files to compile
+    "include": ["src", "tests", "packages/packaging/index.ts"], // which files to compile
     "exclude": ["node_modules"], // which files to skip
   }
