@@ -12,8 +12,7 @@ import type { Quad } from '@rdfjs/types'
 
 import { packageContentQuadsToN3Quads, packageContentQuads } from '../../../../packaging/index'
 
-const packageMimeType = 'text/n3-package'
-
+const outputPreference: Record<string, number> = { 'text/n3-package': 1, "text/turtle-package": .9 }
 /**
  * Converts `internal/quads` to a packaged N3 format.
  */
@@ -22,7 +21,6 @@ export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
   baseUrl: string;
 
   public constructor (baseUrl: string) {
-    const outputPreference: Record<string, number> = { 'text/n3-package': 1 }
     super(
       INTERNAL_QUADS,
       outputPreference
@@ -34,7 +32,6 @@ export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
   Promise<Representation> {
 
     // Can not be undefined if the `canHandle` call passed
-    const contentType = packageMimeType
 
     // Remove the ResponseMetadata graph as we never want to see it in a serialization
     // Note that this is a temporary solution as indicated in following comment:
@@ -57,22 +54,33 @@ export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
       quads.data.on('close', () => { resolve(streamQuads) })
     })
     
-    // Create Package string
-    const packageString = await packageContentQuads(dataQuads, {
-      timeStamp: true,
-      actor: this.baseUrl,
-      origin: identifier.path
-    }, {
-      prefixes: { pack: "https://example.org/ns/package#" }
-    })
 
-    return new BasicRepresentation(packageString, quads.metadata, contentType)
+    let contentType = Object.keys(preferences.type || [])[0];
+    console.log(contentType)
 
-    // // Convert RDF/JS quads into a Notation3 string
-    // const str = await write(dataQuads, {
-    //   format: 'text/n3'
-    // })
-    // console.log(str)
-    // return new BasicRepresentation(str, quads.metadata, contentType)
+    switch (contentType) {
+      case "text/n3-package":
+        return new BasicRepresentation(
+          await packageContentQuads(dataQuads, {
+            timeStamp: true,
+            actor: this.baseUrl,
+            origin: identifier.path
+          }, {
+            prefixes: { pack: "https://example.org/ns/package#" }
+          }), quads.metadata, "text/n3-package")    
+    
+      case "text/turtle-package":
+        return new BasicRepresentation(
+          await packageContentQuads(dataQuads, {
+            timeStamp: true,
+            actor: this.baseUrl,
+            origin: identifier.path
+          }, {
+            prefixes: { pack: "https://example.org/ns/package#" },
+            format: 'text/turtle'
+          }), quads.metadata, "text/turtle-package")
+      default:
+        throw new Error('Incorrect content type')
+    }
   }
 }
