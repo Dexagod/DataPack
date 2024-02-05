@@ -9,7 +9,6 @@ import {
 } from '@solid/community-server'
 import { DataFactory } from 'n3'
 import type { Quad } from '@rdfjs/types'
-import { write } from '@jeswr/pretty-turtle'
 
 import { packageContentQuadsToN3Quads, packageContentQuads } from '../../../../packaging/index'
 
@@ -19,21 +18,20 @@ const packageMimeType = 'text/n3-package'
  * Converts `internal/quads` to a packaged N3 format.
  */
 export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
-  public constructor (baseUrl: any, test: any) {
+  
+  baseUrl: string;
+
+  public constructor (baseUrl: string) {
     const outputPreference: Record<string, number> = { 'text/n3-package': 1 }
     super(
       INTERNAL_QUADS,
       outputPreference
     )
-    test ? test.then(console.log) : console.log(test)
-    baseUrl ? baseUrl.then(console.log) : console.log(baseUrl)
-    this.inputTypes && this.inputTypes.then(console.log)
-    this.outputTypes && this.outputTypes.then(console.log)
+    this.baseUrl = baseUrl;  
   }
 
   public async handle ({ identifier, representation: quads, preferences }: RepresentationConverterArgs):
   Promise<Representation> {
-    console.log('HANDLING')
 
     // Can not be undefined if the `canHandle` call passed
     const contentType = packageMimeType
@@ -62,8 +60,11 @@ export class QuadToPackageConverter extends BaseTypedRepresentationConverter {
     // Create Package string
     const packageString = await packageContentQuads(dataQuads, {
       timeStamp: true,
+      actor: this.baseUrl,
+      origin: identifier.path
+    }, {
+      prefixes: { pack: "https://example.org/ns/package#" }
     })
-    console.log('CONVERTED', packageString)
 
     return new BasicRepresentation(packageString, quads.metadata, contentType)
 

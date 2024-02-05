@@ -8,15 +8,14 @@
       "comment": "An RDF Quads to Package converter",
       "@type": "QuadToPackageConverter",
       "@id": "urn:css-package:quadToPackageConverter",
-      "baseUrl": { "@id": "urn:solid-server:default:variable:baseUrl" },
-      "test": "test"
+      "baseUrl": { "@id": "urn:solid-server:default:variable:baseUrl" }
     },
     {
       "@id": "urn:solid-server:default:ChainedConverter",
       "@type": "ChainedConverter",
       "converters": [
         { 
-          "@type": "QuadToPackageConverter"
+          "@id": "urn:css-package:quadToPackageConverter"
         }
       ]
     }

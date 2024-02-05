@@ -1,6 +1,6 @@
 {
   "name": "@solidlab/packaging-css",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Packaging for data retrieval through content type negotiation.",
   "main": "./dist/css-packaging/src/index.js",
   "types": "./dist/css-packaging/src/index.d.ts",
@@ -44,5 +44,8 @@
   "files": [
     "dist",
     "config"
-  ]
+  ],
+  "devDependencies": {
+    "componentsjs-generator": "^3.1.2"
+  }
 }
