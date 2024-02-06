@@ -1,10 +1,10 @@
 import { Parser, Store, DataFactory } from 'n3'
 import { type Quad } from '@rdfjs/types'
-import { importKey } from './sign'
 import { type webcrypto, subtle } from 'crypto'
 import type * as rdf from 'rdf-js'
 import { hashDataGraph, signParams } from '../util/util'
 import { type N3Package } from './n3util'
+import { importKey } from '../sign/util'
 
 const { namedNode, defaultGraph, quad, literal } = DataFactory
 

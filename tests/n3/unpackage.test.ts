@@ -2,9 +2,9 @@
 import 'jest-rdf' // This is not working correctly somehow
 import { describe, test } from '@jest/globals'
 import { DataFactory, type Quad } from 'n3'
-import { packageContentQuadsToN3Quads } from '../../n3/src/package'
-import { unPackageFromN3Quads } from '../../n3/src/unpackage'
 import { testIsomorphism } from '../util/utils'
+import { packageContent } from '../../src/n3'
+import { unpackageAll, unpackageOne } from '../../src/n3/unpackage'
 
 describe('UnPackaging module', () => {
   const contentQuads: Quad[] = [
@@ -16,13 +16,13 @@ describe('UnPackaging module', () => {
     )]
 
   test('packaging and unpackaging leads to the same value', async () => {
-    const p1 = await packageContentQuadsToN3Quads(contentQuads, {})
-    const quads = unPackageFromN3Quads(p1)
+    const p1 = await packageContent(contentQuads, {})
+    const quads = unpackageAll(p1)
     testIsomorphism(contentQuads, quads)
   })
 
   test('packaging and unpackaging with metadata leads to the same value', async () => {
-    const p1 = await packageContentQuadsToN3Quads(contentQuads, {
+    const p1 = await packageContent(contentQuads, {
       actor: 'https://example.org/person#actor',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin',
@@ -36,20 +36,20 @@ describe('UnPackaging module', () => {
         issuer: 'https://example.org/person#actor'
       }
     })
-    const quads = unPackageFromN3Quads(p1)
+    const quads = unpackageAll(p1)
     testIsomorphism(contentQuads, quads)
   })
 
   test('packaging and unpackaging nested packages leads to the same value', async () => {
-    const p1 = await packageContentQuadsToN3Quads(contentQuads, {})
-    const p2 = await packageContentQuadsToN3Quads(p1, {})
-    const p3 = await packageContentQuadsToN3Quads(p2, {})
-    const quads = unPackageFromN3Quads(p3)
+    const p1 = await packageContent(contentQuads, {})
+    const p2 = await packageContent(p1, {})
+    const p3 = await packageContent(p2, {})
+    const quads = unpackageAll(p3)
     testIsomorphism(contentQuads, quads)
   })
 
   test('packaging and unpackaging nedsted packages with metadata leads to the same value', async () => {
-    const p1 = await packageContentQuadsToN3Quads(contentQuads, {
+    const p1 = await packageContent(contentQuads, {
       actor: 'https://example.org/person#actor',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin',
@@ -64,7 +64,7 @@ describe('UnPackaging module', () => {
       }
     })
 
-    const p2 = await packageContentQuadsToN3Quads(p1, {
+    const p2 = await packageContent(p1, {
       actor: 'https://example.org/person#actor',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin',
@@ -79,7 +79,7 @@ describe('UnPackaging module', () => {
       }
     })
 
-    const p3 = await packageContentQuadsToN3Quads(p2, {
+    const p3 = await packageContent(p2, {
       actor: 'https://example.org/person#actor',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin',
@@ -94,7 +94,30 @@ describe('UnPackaging module', () => {
       }
     })
 
-    const quads = unPackageFromN3Quads(p3)
+    const quads = unpackageAll(p3)
     testIsomorphism(contentQuads, quads)
+  })
+
+  test('unpackaging one package should remove the top package', async () => {
+    const p1 = await packageContent(contentQuads, {})
+    const quads = unpackageOne(p1)
+    testIsomorphism(contentQuads, quads)
+  })
+  test('unpackaging one package should remove the top package when nested', async () => {
+    const p1 = await packageContent(contentQuads, {})
+    const p2 = await packageContent(p1, {})
+    const quads = unpackageOne(p2)
+    testIsomorphism(p1, quads)
+  })
+
+  test('unpackaging one package should remove all packages in the default graph top package', async () => {
+    const p1 = await packageContent(contentQuads, { origin: 'origin1' })
+    const p2 = await packageContent(contentQuads, { origin: 'origin2' })
+    const p3 = await packageContent(contentQuads, { origin: 'origin3' })
+    const p4 = await packageContent(p3, {})
+    const combinedPackages = p1.concat(p2).concat(p4)
+    const quads = unpackageOne(combinedPackages)
+    const verify = await packageContent(contentQuads, { origin: 'origin3' })
+    testIsomorphism(verify, quads)
   })
 })
