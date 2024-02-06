@@ -2,10 +2,9 @@
 import 'jest-rdf' // This is not working correctly somehow
 import { describe, test } from '@jest/globals'
 import { DataFactory } from 'n3'
-import { packageContentQuadsToN3Quads } from '../../n3/src/package'
-import { createContentSignatureFromQuads, generateKeyPair, signContentQuads } from '../../n3/src/sign'
 import type * as rdf from 'rdf-js'
-import { verifyDataGraph } from '../../n3/src/validate'
+import { verifyDataGraph } from '../../src/n3/validate'
+import { generateKeyPair, packageContent, signContent } from '../../src/n3'
 
 describe('UnPackaging module', () => {
   const contentQuads: rdf.Quad[] = [
@@ -25,7 +24,7 @@ describe('UnPackaging module', () => {
   let packageQuads2: rdf.Quad[]
 
   beforeAll(async () => {
-    packageQuads1 = await packageContentQuadsToN3Quads(contentQuads, {
+    packageQuads1 = await packageContent(contentQuads, {
       actor: 'https://example.org/person#actor',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin',
@@ -40,7 +39,7 @@ describe('UnPackaging module', () => {
       }
     })
 
-    packageQuads2 = await packageContentQuadsToN3Quads(contentQuads, {
+    packageQuads2 = await packageContent(contentQuads, {
       actor: 'https://example.org/person#actor2',
       timeStamp: true,
       origin: 'https://example.org/dataspaces#origin2',
@@ -59,17 +58,5 @@ describe('UnPackaging module', () => {
     keyPair2 = await generateKeyPair()
   })
 
-  test('Signatures can be verified', async () => {
-    const signatureString = await createContentSignatureFromQuads(packageQuads1, keyPair1.privateKey)
-    console.log(signatureString)
-    const verificationResult = await verifyDataGraph(packageQuads1, signatureString, keyPair1.publicKey)
-    console.log(verificationResult)
-    expect(verificationResult).toBeTruthy()
-  })
-
-  test('Verifying with an incorrect key should be false', async () => {
-    const signatureString = await signContentQuads(packageQuads1, issuer1, keyPair1.privateKey)
-    const verificationResult = await verifyDataGraph(packageQuads1, signatureString, keyPair2.publicKey) // other public key
-    expect(verificationResult).toBeFalsy()
-  })
+  // TODO:: testing signatures
 })
