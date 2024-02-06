@@ -3,7 +3,8 @@ import { type Quad } from '@rdfjs/types'
 import { importKey } from './sign'
 import { type webcrypto, subtle } from 'crypto'
 import type * as rdf from 'rdf-js'
-import { hashDataGraph, signParams } from './util'
+import { hashDataGraph, signParams } from '../util/util'
+import { type N3Package } from './n3util'
 
 const { namedNode, defaultGraph, quad, literal } = DataFactory
 
@@ -23,9 +24,9 @@ async function getPubKey (issuer: string): Promise<webcrypto.CryptoKey> {
   return await importKey(objects[0].value)
 }
 
-export async function validatePackageSignatures (packageQuads: rdf.Quad[], publicKey: webcrypto.CryptoKey): Promise<boolean> {
+export async function validatePackageSignatures (content: N3Package, publicKey: webcrypto.CryptoKey): Promise<boolean> {
   const store = new Store()
-  store.addQuads(packageQuads)
+  store.addQuads(content)
 
   for (const { subject, object, graph } of store.match(null, namedNode('https://example.org/ns/signature#hasContentSignature'), null)) {
     const [content] = store.getObjects(subject, 'https://example.org/ns/package#content', graph)

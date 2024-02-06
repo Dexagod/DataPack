@@ -3,7 +3,7 @@ import 'jest-rdf' // This is not working correctly somehow
 import { describe, test } from '@jest/globals'
 import { DataFactory, Parser } from 'n3'
 import { write } from '@jeswr/pretty-turtle'
-import { testIsomorphism } from './utils'
+import { testIsomorphism } from '../util/utils'
 
 describe('Module dependencies', () => {
   test('Expect N3Quads serialization and parsing roundtrip to remain constant', async () => {

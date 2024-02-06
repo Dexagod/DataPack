@@ -4,7 +4,7 @@ import { describe, test } from '@jest/globals'
 import { DataFactory, type Quad } from 'n3'
 import { packageContentQuadsToN3Quads } from '../../n3/src/package'
 import { unPackageFromN3Quads } from '../../n3/src/unpackage'
-import { testIsomorphism } from './utils'
+import { testIsomorphism } from '../util/utils'
 
 describe('UnPackaging module', () => {
   const contentQuads: Quad[] = [

@@ -1,9 +1,8 @@
-import { DataFactory, Parser, Writer } from 'n3'
+import { DataFactory } from 'n3'
 import type { BlankNode } from 'n3'
-import { write, Options as WriteOptions } from '@jeswr/pretty-turtle'
-import * as fs from 'fs'
-import { type N3String, PackagePredicates } from './util'
+import { PackagePredicates } from '../util/util'
 import type * as rdf from 'rdf-js'
+import { type N3Package } from './n3util'
 
 const DF = DataFactory
 // const policy = 'https://example.org/ns/policy#'
@@ -30,54 +29,11 @@ interface PackageOptions {
   quads?: rdf.Quad[] // Replaces the blankNode with name value "package" for the package blank node
 }
 
-export async function packageContentFile (path: string, options: PackageOptions, writeOptions?: WriteOptions ): Promise<N3String> {
-  const n3string = fs.readFileSync(path, { encoding: 'utf-8' })
-  const quads = new Parser({ format: 'text/n3' }).parse(n3string)
-  return await processContentToString(quads, options, writeOptions)
-};
-
-export async function packageContentFileToN3Quads (path: string, options: PackageOptions): Promise<rdf.Quad[]> {
-  const n3string = fs.readFileSync(path, { encoding: 'utf-8' })
-  const quads = new Parser({ format: 'text/n3' }).parse(n3string)
-  return await processContentToN3Quads(quads, options, )
-};
-
-export async function packageContentString (n3string: string, options: PackageOptions, writeOptions?: WriteOptions ): Promise<N3String> {
-  const quads = new Parser({ format: 'text/n3' }).parse(n3string)
-  return await processContentToString(quads, options, writeOptions)
+export async function packageContent (content: rdf.Quad[] | N3Package, options: PackageOptions): Promise<N3Package> {
+  return await processContent(content, options)
 }
 
-export async function packageContentStringToN3Quads (n3string: string, options: PackageOptions): Promise<rdf.Quad[]> {
-  const quads = new Parser({ format: 'text/n3' }).parse(n3string)
-  return await processContentToN3Quads(quads, options)
-}
-
-export async function packageContentQuads (quads: rdf.Quad[], options: PackageOptions, writeOptions?: WriteOptions ): Promise<N3String> {
-  return await processContentToString(quads, options, writeOptions)
-}
-
-export async function packageContentQuadsToN3Quads (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
-  return await processContentToN3Quads(quads, options)
-}
-
-async function processContentToString (quads: rdf.Quad[], options: PackageOptions, writeOptions?: WriteOptions ): Promise<N3String> {
-  const packageN3Quads = await processContent(quads, options)
-  writeOptions = writeOptions ?? {}
-  writeOptions.format = writeOptions.format ?? 'text/n3'
-  
-  if (writeOptions.format === 'text/n3') {
-    return await write(packageN3Quads, writeOptions)
-  } else {
-    let w = new Writer(writeOptions)
-    return await w.quadsToString(packageN3Quads)
-  }
-}
-
-async function processContentToN3Quads (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
-  return await processContent(quads, options)
-}
-
-async function processContent (quads: rdf.Quad[], options: PackageOptions): Promise<rdf.Quad[]> {
+async function processContent (quads: rdf.Quad[], options: PackageOptions): Promise<N3Package> {
   const packageGraph = DF.blankNode()
   const packageBlankNode = DF.blankNode()
   const contentGraph = DF.blankNode()
@@ -101,7 +57,7 @@ async function processContent (quads: rdf.Quad[], options: PackageOptions): Prom
   packageQuads = packageQuads.concat(addSignature(packageBlankNode, packageGraph, options))
   packageQuads = packageQuads.concat(addCustomQuads(packageBlankNode, packageGraph, options))
 
-  return packageQuads
+  return packageQuads as N3Package
 }
 
 function addProvenance (packageBlankNode: BlankNode, packageGraph: BlankNode, options: PackageOptions): rdf.Quad[] {

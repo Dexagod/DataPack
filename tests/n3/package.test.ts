@@ -11,7 +11,7 @@ import {
 } from '../../n3/src/package'
 import { DataFactory, Store, type Literal } from 'n3'
 import { PackagePredicates } from '../../n3/src/util'
-import { testIsomorphism } from './utils'
+import { testIsomorphism } from '../util/utils'
 import { type Quad } from 'rdf-js'
 // import * as fs from 'fs'
 
