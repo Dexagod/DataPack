@@ -1,12 +1,11 @@
 import { DataFactory } from 'n3'
 import type { BlankNode } from 'n3'
-import { PackagePredicates } from '../util/util'
+import { PackagePredicates, SignaturePredicates, signatureType } from '../util/util'
 import type * as rdf from 'rdf-js'
 import { type N3Package } from './n3util'
 
 const DF = DataFactory
 // const policy = 'https://example.org/ns/policy#'
-const sign = 'https://example.org/ns/signature#'
 const xsd = 'http://www.w3.org/2001/XMLSchema#'
 const odrl = 'http://www.w3.org/ns/odrl/2/'
 const dcterms = 'http://purl.org/dc/terms/'
@@ -124,10 +123,10 @@ function addSignature (packageBlankNode: BlankNode, packageGraph: BlankNode, opt
   if (options.sign) {
     metadata = metadata.concat([
       DF.quad(packageBlankNode, DF.namedNode(PackagePredicates.hasContentSignature), signatureBlankNode, packageGraph),
-      DF.quad(signatureBlankNode, DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode(sign + 'Signature'), packageGraph),
-      DF.quad(signatureBlankNode, DF.namedNode(sign + 'issuer'), DF.namedNode(options.sign.issuer), packageGraph),
-      DF.quad(signatureBlankNode, DF.namedNode(sign + 'created'), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph),
-      DF.quad(signatureBlankNode, DF.namedNode(sign + 'proofValue'), DF.literal(options.sign.value), packageGraph)
+      DF.quad(signatureBlankNode, DF.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), DF.namedNode(signatureType), packageGraph),
+      DF.quad(signatureBlankNode, DF.namedNode(SignaturePredicates.issuer), DF.namedNode(options.sign.issuer), packageGraph),
+      DF.quad(signatureBlankNode, DF.namedNode(SignaturePredicates.created), DF.literal(new Date().toISOString(), DF.namedNode(xsd + 'dateTime')), packageGraph),
+      DF.quad(signatureBlankNode, DF.namedNode(SignaturePredicates.proofValue), DF.literal(options.sign.value), packageGraph)
     ])
   }
   return metadata

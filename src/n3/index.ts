@@ -5,8 +5,8 @@
 export { packageContent } from './package'
 
 export {
-  unpackageOne as unpackContent,
-  unpackageAll as flattenContent
+  unpackageOne as unpackageSingle,
+  unpackageAll as unpackageContent
 } from './unpackage'
 
 export {

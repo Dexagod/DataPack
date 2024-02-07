@@ -3,6 +3,7 @@ import type * as rdf from 'rdf-js'
 import { type Quads, RDFC10 } from 'rdfjs-c14n'
 
 const pack = 'https://example.org/ns/package#'
+const sign = 'https://example.org/ns/signature#'
 
 export enum PackagePredicates {
   package = pack + 'package',
@@ -13,6 +14,14 @@ export enum PackagePredicates {
   hasContentPolicy = pack + 'hasContentPolicy',
   hasContentSignature = pack + 'hasContentSignature',
 }
+
+export enum SignaturePredicates {
+  issuer = sign + 'issuer',
+  created = sign + 'created',
+  proofValue = sign + 'proofValue',
+}
+
+export const signatureType: string = sign + 'Signature'
 
 export async function hashDataGraph (input: rdf.Quad[]): Promise<Uint8Array> {
   const rdfc10 = new RDFC10(DataFactory)

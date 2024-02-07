@@ -59,6 +59,8 @@ function removeOnePackage (quads: rdf.Quad[]): rdf.Quad[] | N3Package {
       resultingQuads.push(
         DataFactory.quad(quad.subject, quad.predicate, quad.object, DataFactory.defaultGraph())
       )
+    } else if (quad.predicate.value === pack + 'package' && quad.graph.termType === 'DefaultGraph') {
+      // _ignore
     } else {
       resultingQuads.push(quad)
     }
