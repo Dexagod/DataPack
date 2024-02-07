@@ -2,7 +2,7 @@
   "name": "rdf-package",
   "version": "0.1.0",
   "description": "Packaging RDF data",
-  "main": "dist/src/index.ts",
+  "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "author": "Ruben Dedecker <ruben.dedecker@gmail.com>",
   "repository": {
