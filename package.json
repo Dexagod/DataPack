@@ -23,7 +23,8 @@
     "build": "tsc",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "prepare": "npm run build",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "prepublish": "npm run lint; npm run test"
   },
   "dependencies": {
     "@jeswr/pretty-turtle": "^1.4.0",
