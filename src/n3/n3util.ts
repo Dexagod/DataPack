@@ -33,9 +33,9 @@ export async function N3QuadsToN3String (quads: N3Quads): Promise<N3String> {
  */
 export function extractPackageContents (store: Store, packageTerm: rdf.Term): N3Quads {
   let contentGraph: rdf.Term
-  const packagingQuad = store.getQuads(packageTerm, PackagePredicates.package, null, null)[0]
-  if (packagingQuad) {
-    contentGraph = store.getQuads(null, PackagePredicates.content, null, packagingQuad.object)[0]?.object
+  const packageGraph = store.getQuads(packageTerm, PackagePredicates.package, null, null)[0]?.object
+  if (packageGraph) {
+    contentGraph = store.getQuads(null, PackagePredicates.content, null, packageGraph)[0]?.object
   } else {
     contentGraph = store.getQuads(packageTerm, PackagePredicates.content, null, null)[0]?.object
   }
