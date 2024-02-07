@@ -1,13 +1,12 @@
 import { Store, DataFactory } from 'n3'
-import { type Quad } from '@rdfjs/types'
 import { type webcrypto, subtle } from 'crypto'
 import type * as rdf from 'rdf-js'
 import { PackagePredicates, SignaturePredicates, hashDataGraph, signParams } from '../util/util'
-import { N3QuadsToN3String, type N3Package, extractPackageContents } from './n3util'
+import { type N3Package, extractPackageContents } from './n3util'
 
 export type KeyMap = Map<string, webcrypto.CryptoKey>
 
-const { namedNode, quad } = DataFactory
+const { namedNode } = DataFactory
 
 export async function validatePackageSignatures (content: N3Package, keyMap: KeyMap): Promise<boolean> {
   const store = new Store()

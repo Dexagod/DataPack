@@ -21,7 +21,7 @@ module.exports = {
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module"
-    }, 
+    },
     "rules": {
         "@typescript-eslint/strict-boolean-expressions": 0
     }
