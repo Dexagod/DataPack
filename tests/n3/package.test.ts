@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import 'jest-rdf' // This is not working correctly somehow
 import { describe, expect, test } from '@jest/globals'
 import { DataFactory, Store, type Literal } from 'n3'
@@ -6,7 +5,6 @@ import { testIsomorphism } from '../util/utils'
 import { type Quad } from 'rdf-js'
 import { packageContent } from '../../src/n3'
 import { PackagePredicates } from '../../src/util/util'
-// import * as fs from 'fs'
 
 // TODO:: Mocking readFileSync is not working so I'm ignoring it atm
 describe('Packaging module', () => {
@@ -17,10 +15,6 @@ describe('Packaging module', () => {
       DataFactory.namedNode('http://example.org/ns#c'),
       undefined
     )]
-
-  test('Creating a package without metadata adds a date value', () => {
-    expect(1).toBe(1)
-  })
 
   test('Expect empty options to add package without any metadata', async () => {
     const p = await packageContent(contentQuads, {})

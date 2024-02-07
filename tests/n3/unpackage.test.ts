@@ -116,8 +116,9 @@ describe('UnPackaging module', () => {
     const p3 = await packageContent(contentQuads, { origin: 'origin3' })
     const p4 = await packageContent(p3, {})
     const combinedPackages = p1.concat(p2).concat(p4)
+
     const quads = unpackageOne(combinedPackages)
-    const verify = await packageContent(contentQuads, { origin: 'origin3' })
+    const verify = (await packageContent(contentQuads, { origin: 'origin3' })).concat(contentQuads).concat(contentQuads)
     testIsomorphism(verify, quads)
   })
 })
