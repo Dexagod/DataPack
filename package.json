@@ -30,11 +30,12 @@
     "n3": "github:rdfjs/N3.js#fd6e7f1d5982fa113349a6ad03ad99e52db898d7",
     "rdf-parse": "^2.3.3",
     "rdfjs-c14n": "^3.0.0",
-    "string-to-stream": "^3.0.1"
+    "string-to-stream": "^3.0.1",
+    "@types/jest": "^29.1.2",
+    "@jest/globals": "29.1.2",
+    "@types/n3": "^1.16.4"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "@types/n3": "^1.16.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
@@ -42,7 +43,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
-    "jest": "^29.7.0",
+    "jest": "^29.1.2",
     "jest-rdf": "^1.8.1",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.1",

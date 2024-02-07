@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type Quad } from 'rdf-js'
 import 'jest-rdf'
 
