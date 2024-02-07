@@ -4,6 +4,10 @@
   "description": "Packaging RDF data",
   "main": "dist/index.js",
   "author": "Ruben Dedecker <ruben.dedecker@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SolidLabResearch/RDF-Package.git"
+  },
   "keywords": [
     "turtle",
     "rdf",
