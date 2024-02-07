@@ -1,1 +1,1 @@
-export * as n3 from './n3/index'
+export * as n3pack from './n3/index'
