@@ -21,7 +21,8 @@
     "test": "jest",
     "build": "tsc",
     "lint": "eslint \"**/*.{ts,tsx}\"",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@jeswr/pretty-turtle": "^1.4.0",
