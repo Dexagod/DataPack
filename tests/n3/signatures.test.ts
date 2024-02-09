@@ -6,7 +6,7 @@ import type * as rdf from 'rdf-js'
 import { generateKeyPair, packageContent, signContent, verifySignatures } from '../../src/n3'
 import { unpackageAll, unpackageOne } from '../../src/n3/unpackage'
 import { testIsomorphism } from '../util/utils'
-import { type KeyMap } from '../../src/n3/validate'
+import { type KeyMap } from '../../src/pack/validate'
 
 describe('UnPackaging module', () => {
   const contentQuads: rdf.Quad[] = [
